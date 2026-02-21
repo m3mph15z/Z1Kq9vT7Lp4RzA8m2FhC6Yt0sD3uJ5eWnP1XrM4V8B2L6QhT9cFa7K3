@@ -1,0 +1,57 @@
+local toggleKey = Enum.KeyCode.E
+local statusKey = Enum.KeyCode.C
+local enabled = false
+local lastTarget = nil
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local StarterGui = game:GetService("StarterGui")
+
+local player = Players.LocalPlayer
+local mouse = player:GetMouse()
+
+local function notify(title, text)
+    StarterGui:SetCore("SendNotification", {
+        Title = title,
+        Text = text,
+        Duration = 2
+    })
+end
+
+notify("Flick Trigger by Memphis", "Trigger executado com sucesso.\nE (Liga/Desliga) | C (Status)")
+
+UserInputService.InputBegan:Connect(function(input, gp)
+    if gp then return end
+    if input.KeyCode == toggleKey then
+        enabled = not enabled
+        lastTarget = nil
+    elseif input.KeyCode == statusKey then
+        notify("Trigger Status", enabled and "Ativado" or "Desativado")
+    end
+end)
+
+RunService.Heartbeat:Connect(function()
+    if not enabled then return end
+
+    local target = mouse.Target
+    if target then
+        local model = target.Parent
+        if model and not model:FindFirstChild("Humanoid") then
+            model = model.Parent
+        end
+
+        local humanoid = model and model:FindFirstChild("Humanoid")
+
+        if humanoid and humanoid.Health > 0 and model.Name ~= player.Name then
+            if model ~= lastTarget then
+                lastTarget = model
+                mouse1click() 
+            end
+        else
+            lastTarget = nil
+        end
+    else
+        lastTarget = nil
+    end
+end)
