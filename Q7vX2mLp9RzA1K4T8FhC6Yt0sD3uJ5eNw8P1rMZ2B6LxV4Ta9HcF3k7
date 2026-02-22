@@ -11,15 +11,15 @@ local StarterGui = game:GetService("StarterGui")
 local player = Players.LocalPlayer
 local mouse = player:GetMouse()
 
-local function notify(title, text)
+local function notify(title, text, time)
     StarterGui:SetCore("SendNotification", {
         Title = title,
         Text = text,
-        Duration = 2
+        Duration = time or 2
     })
 end
 
-notify("Flick Trigger by Memphis", "Trigger executado com sucesso.\nE (Liga/Desliga) | C (Status)")
+notify("Flick Trigger by Memphis", "Trigger em execução.\n🇪 (Liga/Desliga) | 🇨 (Status)", 3)
 
 UserInputService.InputBegan:Connect(function(input, gp)
     if gp then return end
@@ -27,7 +27,7 @@ UserInputService.InputBegan:Connect(function(input, gp)
         enabled = not enabled
         lastTarget = nil
     elseif input.KeyCode == statusKey then
-        notify("Trigger Status", enabled and "Ativado" or "Desativado")
+        notify("Trigger Status", enabled and "Ativado" or "Desativado", 2)
     end
 end)
 
