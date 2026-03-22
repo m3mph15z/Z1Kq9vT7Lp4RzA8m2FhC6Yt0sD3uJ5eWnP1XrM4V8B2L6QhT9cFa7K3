@@ -1,57 +1,50 @@
-local toggleKey = Enum.KeyCode.E
-local statusKey = Enum.KeyCode.C
-local enabled = false
-local lastTarget = nil
+local a=Enum.KeyCode.E
+local b=Enum.KeyCode.C
+local c=false
+local d=nil
 
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
-local StarterGui = game:GetService("StarterGui")
+local e=game:GetService("Players")
+local f=game:GetService("RunService")
+local g=game:GetService("UserInputService")
+local h=game:GetService("StarterGui")
 
-local player = Players.LocalPlayer
-local mouse = player:GetMouse()
+local i=e.LocalPlayer
+local j=i:GetMouse()
 
-local function notify(title, text, time)
-    StarterGui:SetCore("SendNotification", {
-        Title = title,
-        Text = text,
-        Duration = time or 2
-    })
+local function k(l,m,n)
+    h:SetCore("SendNotification",{Title=l,Text=m,Duration=n or 2})
 end
 
-notify("Flick Trigger by Memphis", "Trigger em execução.\n🇪 (Liga/Desliga) | 🇨 (Status)", 3)
+k("Flick Trigger by Memphis","Trigger em execução.\n🇪 (Liga/Desliga) | 🇨 (Status)",3)
 
-UserInputService.InputBegan:Connect(function(input, gp)
-    if gp then return end
-    if input.KeyCode == toggleKey then
-        enabled = not enabled
-        lastTarget = nil
-    elseif input.KeyCode == statusKey then
-        notify("Trigger Status", enabled and "Ativado" or "Desativado", 2)
+g.InputBegan:Connect(function(o,p)
+    if p then return end
+    if o.KeyCode==a then
+        c=not c
+        d=nil
+    elseif o.KeyCode==b then
+        k("Trigger Status",c and "Ativado" or "Desativado",2)
     end
 end)
 
-RunService.Heartbeat:Connect(function()
-    if not enabled then return end
-
-    local target = mouse.Target
-    if target then
-        local model = target.Parent
-        if model and not model:FindFirstChild("Humanoid") then
-            model = model.Parent
+f.Heartbeat:Connect(function()
+    if not c then return end
+    local q=j.Target
+    if q then
+        local r=q.Parent
+        if r and not r:FindFirstChild("Humanoid") then
+            r=r.Parent
         end
-
-        local humanoid = model and model:FindFirstChild("Humanoid")
-
-        if humanoid and humanoid.Health > 0 and model.Name ~= player.Name then
-            if model ~= lastTarget then
-                lastTarget = model
-                mouse1click() 
+        local s=r and r:FindFirstChild("Humanoid")
+        if s and s.Health>0 and r.Name~=i.Name then
+            if r~=d then
+                d=r
+                if mouse1click then mouse1click() end
             end
         else
-            lastTarget = nil
+            d=nil
         end
     else
-        lastTarget = nil
+        d=nil
     end
 end)
